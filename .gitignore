@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Mac garbage
+.DS_Store
+
+#local config file
+logfiles/
+data.json
+
+#Environement
+env/
+venv/
+virtu/
+.env
+.venv
+.virtu
+env.bak/
+venv.bak/
+virtu.bak/
