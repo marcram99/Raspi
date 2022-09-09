@@ -8,6 +8,13 @@ __pycache__/
 #local config file
 logfiles/
 data.json
+config.py
+
+#Test files
+light.json
+test.py
+static/
+templates/
 
 #Environement
 env/
