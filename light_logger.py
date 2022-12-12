@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from config import Config
 
 now = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
-print(f"Light logger started @ {now}")
 log_file = Config.light_logfile
 data_file = Config.data_file
 if not data_file.exists():
@@ -15,7 +14,8 @@ if not data_file.exists():
 test_lightcaptor = Config.files_path.joinpath("light.json")
 if not test_lightcaptor.exists():
     with open(test_lightcaptor, 'w') as json_file:
-        json.dump({'light_mode': 'dark'},json_file)
+        json.dump({'light_mode': 'dark'}, json_file)
+
 with open(data_file) as json_file:
     data = json.load(json_file)
     light_mode = data["light_mode"]
@@ -23,11 +23,13 @@ with open(data_file) as json_file:
     warning_level = data["warning_level"]
 with open(test_lightcaptor) as json_file:
     light_readed = json.load(json_file)['light_mode']
-print(f'DEBUG: Data.json values: light = {light_mode} @ {last_change} / warning level = {warning_level}')
+
+print(f'DEBUG: Data.json = {light_mode} @ {last_change} / {warning_level}')
 print(f'DEBUG: new light value readed: {light_readed}')
 
 
 def write_2_log(message):
+    print(f'DEBUG@write_2_log: {message}')
     with open(log_file, 'a') as log:
         log.write(message)
 
@@ -59,12 +61,10 @@ else:
         print(f'DEBUG: time delta = {time_delta}')
         if warning_level < 1:
             if time_delta > timedelta(minutes=1):
-                print('DEBUG: Action warning1 (delta >1 AND warning level = 0)')
                 write_2_log(f"{now}_warning level grow to 1\n")
                 write_2_json("light", last_change, 1)
         elif warning_level < 2:
             if time_delta > timedelta(minutes=2):
-                print('DEBUG: Action warning2 (delta >2 AND warning level = 1)')
                 write_2_log(f"{now}_warning level grow to 2\n")
                 write_2_json("light", last_change, 2)
 

@@ -39,7 +39,7 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.get("/test")
+@app.get("/")
 async def test_page(request: Request):
     with open(data_file) as json_file:
         data = json.load(json_file)
