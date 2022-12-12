@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content = "width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" media="screen" href = "{{ url_for('static', path='bootstrap/bootstrap.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Asap&family=Overpass&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+        <link rel="stylesheet" href = "{{ url_for('static', path='bootstrap/style.css') }}">
+        <script src="{{ url_for('static', path='bootstrap/jquery-3.5.1.js') }}"></script>
+        <script src="{{ url_for('static', path='bootstrap/bootstrap.bundle.js') }}"></script>
+        <title>home {{ page_name }}</title>
+        <link  rel="icon" type="image/x-icon" href="{{ url_for('static', path='images/Logo02.png') }}">
+    </head>       
+    <body>
+        <div class="card m-3 shadow" style="width: 26rem;">
+            <div class="card-body">
+                <h5 class="card-tittle"><span class="pt-n2">Data.json</span><i onclick="refresh_json()" class="float-end bi bi-arrow-clockwise" id='refresh'></i></h5>
+                <hr>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>light_mode:</th> 
+                            <td id="light_mode">{{ data.light_mode }}</td>
+                        </tr>
+                        <tr>
+                            <th>last_change:</th>
+                            <td id="last_change">{{ data.last_change }}</td>
+                        </tr>
+                        <tr>
+                            <th>warning_level:</th>
+                            <td id="warning_level">{{ data.warning_level }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card m-3 shadow" style="width: 18rem;">
+            <div class="card-body ">
+                <h5 class="card-tittle"><span class="pt-n2">Light captor</span><span class="float-end" id='light_value'>{{ light_mode }}</span></h5>
+                <hr>
+                <div class="row">
+                    <button class="btn btn-dark m-2 col-5" onclick="set_light('dark')">set to: <i class="bi-moon mx-2"></i></button>
+                    <button class="btn btn-light m-2 col-5" onclick="set_light('light')">set to: <i class="bi-sun mx-2"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="card m-3 shadow" style="width: 18rem;">
+            <div class="card-body ">
+                <div class="row">
+                    <h5 class="card-tittle col-7"><span >Temp captor</span></h5>
+                    <span class="btn btn-dark btn-sm col-4" onclick="set_temp()">send</span>
+                </div>
+                <hr>
+                <div class="row">
+                    <span class="col-6">Temp:</span>
+                    <span class="col-6 text-end"id="temp_value">15<span>
+                </div>
+                <input type="range" class="form-range " min="0" max="30" id="temp_range" onchange="t_value(this.value)">
+                <div class="row">
+                    <span class="col-6">Hum:</span>
+                    <span class="col-6 text-end"id="hum_value">50<span>
+                </div>
+                <input type="range" class="form-range " min="0" max="100" id="hum_range" onchange="h_value(this.value)">
+            </div>
+        </div>
+    </body>
+    <script>
+        console.log('script is running') 
+        function set_light(value){
+            var last_change = document.getElementById('last_change').innerHTML 
+            var warning_level = document.getElementById('warning_level').innerHTML 
+            var json_data = {"light_value": value, "last_change": last_change, "warning_level": warning_level} 
+            console.log(json_data)
+            fetch("/API/light_mode",{
+                  method: "POST",
+                  headers: {'Content-Type':'application/json'},
+                  body: JSON.stringify(json_data)
+                 }) 
+            .then(response => response.json())
+            .then(json => set_light_icon(json.light_mode))
+        }
+        function set_light_icon(value){
+            if(value.light_value  == 'dark'){
+                document.getElementById('light_value').innerHTML = '<i class="bi-moon mb-2" style="font-size: 22px; color: cornflowerblue;"></i>'
+            }
+            if(value.light_value == 'light'){
+                document.getElementById('light_value').innerHTML = '<i class="bi-sun" style="font-size: 22px; color: gold;"></i>'
+            }
+        }
+        function refresh_json(){
+            fetch("/API/read_json",{
+                  method: "POST",
+                  headers: {'Content-Type':'application/json'},
+                 }) 
+           .then(response => response.json())
+           .then(json => set_json_value(json))
+        }
+        function set_json_value(value){
+            document.getElementById('light_mode').innerHTML = value.light_mode 
+            document.getElementById('last_change').innerHTML = value.last_change 
+            document.getElementById('warning_level').innerHTML = value.warning_level 
+        }
+        function t_value(value){
+            document.getElementById('temp_value').innerHTML = value
+        }
+        function h_value(value){
+            document.getElementById('hum_value').innerHTML = value
+        }
+        function set_temp(){
+            var temp = document.getElementById('temp_range').value
+            var hum = document.getElementById('hum_range').value
+            var json_data = {"temp": temp, "hum": hum}
+            console.log(temp+'/'+hum)
+            fetch("/API/temp_mode",{
+                  method: "POST",
+                  headers: {'Content-Type':'application/json'},
+                  body: JSON.stringify(json_data)
+            })
+        }
+    </script>
+</html>
