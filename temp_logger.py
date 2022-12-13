@@ -9,8 +9,9 @@ if not debug_logfile.exists():
 logfile = Config.temp_logfile
 if not logfile.exists():
     logfile.touch()
-temp = 0
-hum = 0
+t_capt = Test_captor()
+temp = t_capt.read_temp()
+hum = t_capt.read_hum()
 
 data = f'{time_stamp}_T:{temp:.2f}_H:{hum:.1f}\n'
 print(data)
