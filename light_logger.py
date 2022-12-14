@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta
 from config import Config
+from capteurs import Light_captor as capt
 
 now = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
 log_file = Config.light_logfile
@@ -11,19 +12,21 @@ if not data_file.exists():
                    'last_change': now,
                    'warning_level': 0
                    }, new_file)
-test_lightcaptor = Config.files_path.joinpath("light.json")
-if not test_lightcaptor.exists():
+#test_lightcaptor = Config.files_path.joinpath("light.json")
+light_capt = capt()
+light_readed = light_capt.read_state(5)
+""" if not test_lightcaptor.exists():
     with open(test_lightcaptor, 'w') as json_file:
         json.dump({'light_mode': 'dark'}, json_file)
-
+"""
 with open(data_file) as json_file:
     data = json.load(json_file)
     light_mode = data["light_mode"]
     last_change = data["last_change"]
     warning_level = data["warning_level"]
-with open(test_lightcaptor) as json_file:
+"""with open(test_lightcaptor) as json_file:
     light_readed = json.load(json_file)['light_mode']
-
+"""
 print(f'DEBUG: Data.json = {light_mode} @ {last_change} / {warning_level}')
 print(f'DEBUG: new light value readed: {light_readed}')
 
