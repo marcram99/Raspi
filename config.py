@@ -6,11 +6,11 @@ from pathlib import Path
 
 class Config():
     # mac path:
-    files_path = Path.home().joinpath('Marc-perso/code/python/Raspi/files')
-    logfiles_path = Path.home().joinpath('Marc-perso/code/python/Raspi/logfiles')
+    #files_path = Path.home().joinpath('Marc-perso/code/python/Raspi/files')
+    #logfiles_path = Path.home().joinpath('Marc-perso/code/python/Raspi/logfiles')
     # linux path:
-    #files_path = Path.home().joinpath('Raspi/files')
-    #logfiles_path = Path.home().joinpath('Raspi/logfiles')
+    files_path = Path.home().joinpath('Raspi/files')
+    logfiles_path = Path.home().joinpath('Raspi/logfiles')
     if not files_path.exists():
         Path.mkdir(files_path)
     if not logfiles_path.exists():
