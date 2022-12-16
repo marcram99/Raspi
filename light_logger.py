@@ -63,11 +63,11 @@ else:
         time_delta = datetime.now() - datetime.strptime(last_change, "%Y-%m-%d %H:%M:%S")
         print(f'DEBUG: time delta = {time_delta}')
         if warning_level < 1:
-            if time_delta > timedelta(minutes=1):
+            if time_delta > timedelta(minutes=5):
                 write_2_log(f"{now}_warning level grow to 1\n")
                 write_2_json("light", last_change, 1)
         elif warning_level < 2:
-            if time_delta > timedelta(minutes=2):
+            if time_delta > timedelta(minutes=10):
                 write_2_log(f"{now}_warning level grow to 2\n")
                 write_2_json("light", last_change, 2)
 
