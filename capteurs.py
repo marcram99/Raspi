@@ -89,9 +89,3 @@ class Light_captor():
             return "light"
         else:
             return "dark"
-
-
-class Test_captor():
-    ...
-
-    
