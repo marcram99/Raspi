@@ -1,28 +1,19 @@
 from pathlib import Path
 from paramiko import SSHClient, ed25519key, AutoAddPolicy
+from scp import SCPClient
 from config import Config
 
+my_file = Config.files_path.joinpath('2024-08-06_capt01.log')
+
+hostname = Config.ssh_hostname
+user = Config.ssh_user
 ssh_key = Config.ssh_key
 private_key = ed25519key.Ed25519Key.from_private_key_file(ssh_key)
-client = SSHClient()
-client.set_missing_host_key_policy(AutoAddPolicy)
-cmd = 'ls -l'
-print('---------- start SSH connexion----------')
-client.connect('46.226.104.139', username='ubuntu', pkey=private_key)
-sftp_client = client.open_sftp()
-# sftp_client.get(remote_path, output_file)
-# sftp_client.put(local_path, remote_path)
-client.close()
+with SSHClient() as client:
+    client.set_missing_host_key_policy(AutoAddPolicy)
+    print('---------- SSH connexion started----------')
+    client.connect(hostname, username=user, pkey=private_key)
+    with SCPClient(client.get_transport()) as scp:
+        scp.put(my_file,'/home/ubuntu/2024-08-06_capt01.log')
 print('---------- SSH connexion closed ----------')
 
-"""
-stdin, stdout, stderr = client.exec_command(cmd)
-output = stdout.read()
-print(str(output, 'utf8'))
-
-log_path = Path.home().joinpath('Raspi/logfiles')
-content = list(log_path.glob('*.log'))
-print(content)
-print(20*'-')
-print(f'nb de fichier:{len(content)}')
-"""
