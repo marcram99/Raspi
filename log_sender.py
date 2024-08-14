@@ -3,7 +3,8 @@ from paramiko import SSHClient, ed25519key, AutoAddPolicy
 from scp import SCPClient
 from config import Config
 
-my_file = Config.files_path.joinpath('2024-08-06_capt01.log')
+file_name = '2024-08-06_capt01.log'
+my_file = Config.files_path.joinpath(file_name)
 
 hostname = Config.ssh_hostname
 user = Config.ssh_user
