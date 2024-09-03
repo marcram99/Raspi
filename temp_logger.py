@@ -24,3 +24,4 @@ with open(temp_file,'w') as new_temp:
     json.dump({"temp": temp, 
                "hum": hum},
               new_temp)
+# petit commentaire
